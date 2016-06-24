@@ -1,7 +1,9 @@
 (function () {
-  var enpaco = {};
+var enpaco = {};
+enpaco.encrypt = enpaco.encrypt.mode.nacl;
+enpaco.decrypt = enpaco.decrypt.mode.nacl;
 
-  var encrypt = enpaco.encrypt = function(message) {
+enpaco.encrypt.mode.nacl = function(message) {
     var msg = nacl.util.decodeUTF8(message);
     var key = nacl.randomBytes(nacl.secretbox.keyLength);
     var nonce = nacl.randomBytes(nacl.secretbox.nonceLength);
@@ -18,9 +20,9 @@
         payload: ascii_payload,
         key: ascii_key
     }
-  }
+}
 
-  var decrypt = enpaco.decrypt = function(ascii_payload, ascii_key) {
+enpaco.decrypt.mode.nacl = function(ascii_payload, ascii_key) {
     var key = nacl.util.decodeBase64(ascii_key);
     var payload = nacl.util.decodeBase64(ascii_payload);
     var nonce = payload.slice(0, nacl.secretbox.nonceLength);
@@ -31,5 +33,6 @@
 
     return message;
 }
+
 window.enpaco = enpaco;
 }());
